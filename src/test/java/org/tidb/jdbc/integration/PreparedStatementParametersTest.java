@@ -153,11 +153,6 @@ public class PreparedStatementParametersTest extends Common {
     boolean minus = TimeZone.getDefault().getOffset(System.currentTimeMillis()) > 0;
     checkSendTimestamp(
         ps -> ps.setDate(1, Date.valueOf("2010-01-12"), utcCal),
-        rs ->
-            assertEquals(minus ? 1263139200000L : 1263164400000L, rs.getDate(1, utcCal).getTime()),
-        con);
-    checkSendTimestamp(
-        ps -> ps.setDate(1, Date.valueOf("2010-01-12"), utcCal),
         rs -> assertEquals(minus ? "2010-01-11" : "2010-01-12", rs.getDate(1, utcCal).toString()),
         con);
     checkSendTimestamp(
