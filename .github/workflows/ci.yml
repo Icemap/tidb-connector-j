@@ -21,6 +21,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Setup TiDB
-      uses: Icemap/tidb-action@v1.0
+      uses: Icemap/tidb-action@main
     - name: Test with Maven
       run: mvn test
