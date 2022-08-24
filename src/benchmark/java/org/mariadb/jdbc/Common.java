@@ -2,7 +2,7 @@
 // Copyright (c) 2012-2014 Monty Program Ab
 // Copyright (c) 2015-2021 MariaDB Corporation Ab
 
-package org.mariadb.jdbc;
+package org.tidb.jdbc;
 
 import org.openjdk.jmh.annotations.*;
 
@@ -52,7 +52,7 @@ public class Common {
           className = "com.mysql.cj.jdbc.Driver";
           break;
         case "mariadb":
-          className = "org.mariadb.jdbc.Driver";
+          className = "org.tidb.jdbc.Driver";
           break;
         default:
           throw new RuntimeException("wrong param");
@@ -93,7 +93,7 @@ public class Common {
         try (Connection conn =
                      DriverManager.getConnection(
                              String.format(
-                                     "jdbc:mariadb://%s:%s/%s?user=%s&password=%s",
+                                     "jdbc:tidb://%s:%s/%s?user=%s&password=%s",
                                      host, port, database, username, password))) {
           Statement stmt = conn.createStatement();
           try {

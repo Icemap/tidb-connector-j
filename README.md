@@ -4,7 +4,7 @@ English | [中文](/README-zh.md)
 
 ***TiDB java connector (Community)***:
 
-- Is A JDBC 4.2 compatible driver, used to connect applications developed in Java to TiDB databases.
+- Is a JDBC 4.2 compatible driver, used to connect applications developed in Java to TiDB databases.
 - Is LGPL licensed.
 - Based on [MariaDB java connector](https://github.com/mariadb-corporation/mariadb-connector-j) 3.0.7 version.
 - Is a ***NON-OFFICIAL*** library.
@@ -27,7 +27,7 @@ The driver (jar) can be downloaded from maven:
 
 ```xml
 <dependency>
-    <groupId>org.mariadb.jdbc</groupId>
+    <groupId>org.tidb.jdbc</groupId>
     <artifactId>mariadb-java-client</artifactId>
     <version>3.0.7</version>
 </dependency>
@@ -43,11 +43,19 @@ For a Getting started guide, API docs, recipes, etc. see here:
 
 ## Roadmap
 
-- [ ] Remove code about `triggers`, `events`, `procedures`
-- [ ] Remove test case about `triggers`, `events`, `procedures` follow the code.
+- [x] Remove codes and test cases about `procedures`.
+- [x] Remove codes and test cases about `geometry`.
+- [x] Remove codes and test cases about `MariaDB Xpand`.
+- [x] Remove codes and test cases about `READ_UNCOMMITTED` / `SERIALIZABLE` transaction isolation.
+- [x] Remove codes and test cases about `XA`.
+- [x] Repair `major`, `minor`, `patch` version get logic.
 - [ ] Build CI for TiDB.
-- [ ] Support close connection for TiDB (Use `KILL TIDB xxx` statement).
+- [x] Support close connection for TiDB (Use `KILL TIDB xxx` statement).
 - [ ] Support HA for TiDB.
 - [ ] Support [Optimistic Transactions and Pessimistic Transactions](https://docs.pingcap.com/tidb/stable/dev-guide-optimistic-and-pessimistic-transaction) for TiDB.
 - [ ] Support [Follower Read](https://docs.pingcap.com/tidb/stable/dev-guide-use-follower-read)
 - [ ] Support [Stale Read](https://docs.pingcap.com/tidb/stable/dev-guide-use-stale-read)
+
+## Not Support JDBC Config
+
+- `maxAllowedPacket`: TiDB can set it only global level，session level is readonly。
