@@ -13,9 +13,8 @@
 
 ## 状态
 
-[![Linux Build](https://travis-ci.com/Icemap/tidb-connector-j.svg?branch=master)](https://app.travis-ci.com/github/mariadb-corporation/mariadb-connector-j)
-[![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-green.svg?style=flat-square)](http://opensource.org/licenses/LGPL-2.1)
-[![codecov][codecov-image]][codecov-url]
+![Build Result](https://github.com/Icemap/tidb-connector-j/actions/workflows/ci.yml/badge.svg)
+![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-green.svg)
 
 ## 获取途径
 
