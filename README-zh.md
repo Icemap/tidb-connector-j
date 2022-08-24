@@ -27,7 +27,7 @@ Java 8 以上 :
 
 ```xml
 <dependency>
-    <groupId>org.mariadb.jdbc</groupId>
+    <groupId>org.tidb.jdbc</groupId>
     <artifactId>mariadb-java-client</artifactId>
     <version>3.0.7</version>
 </dependency>
@@ -43,11 +43,19 @@ Java 8 以上 :
 
 ## 路线图
 
-- [ ] 去除关于 `触发器`, `事件`, `存储过程` 的代码。
-- [ ] 跟随代码，去除关于 `触发器`, `事件`, `存储过程` 的测试用例。
+- [x] 去除关于 `存储过程` 的代码及测试用例。
+- [x] 去除关于 `地理信息` 的代码及测试用例。
+- [x] 去除关于 `MariaDB Xpand` 的代码及测试用例。
+- [x] 去除关于 `READ_UNCOMMITTED` / `SERIALIZABLE` 事务隔离级别的代码及测试用例。
+- [x] 去除关于 `XA` 的代码及测试用例。
+- [x] 修复 major, minor, patch 版本的获取逻辑。
 - [ ] 与 TiDB 集成构建 CI。
-- [ ] 支持 TiDB 的关闭连接 (使用 `KILL TIDB xxx` 语句)。
+- [x] 支持 TiDB 的关闭连接 (使用 `KILL TIDB xxx` 语句)。
 - [ ] 支持 TiDB 的高可用。
 - [ ] 支持 TiDB 的 [乐观事务和悲观事务](https://docs.pingcap.com/zh/tidb/stable/dev-guide-optimistic-and-pessimistic-transaction)。
 - [ ] 支持 TiDB 的 [Follower Read](https://docs.pingcap.com/zh/tidb/stable/dev-guide-use-follower-read)。
 - [ ] 支持 TiDB 的 [Stale Read](https://docs.pingcap.com/tidb/stable/dev-guide-use-stale-read)。
+
+## 不支持的 JDBC 配置
+
+- `maxAllowedPacket`: TiDB 的 `max_allowed_packet` 仅为全局，session 级别不可更改。
