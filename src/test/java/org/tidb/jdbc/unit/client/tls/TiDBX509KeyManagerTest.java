@@ -12,13 +12,13 @@ import java.security.*;
 import java.security.cert.CertificateException;
 import javax.security.auth.x500.X500Principal;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.client.tls.MariaDbX509KeyManager;
+import org.tidb.jdbc.client.tls.TiDBX509KeyManager;
 
-public class MariaDbX509KeyManagerTest {
+public class TiDBX509KeyManagerTest {
 
   @Test
   public void check() throws Exception {
-    MariaDbX509KeyManager keyMger = get();
+    TiDBX509KeyManager keyMger = get();
     String[] aliases = keyMger.getClientAliases("RSA", null);
     assertEquals(1, aliases.length);
     assertEquals("mysqlalias", aliases[0]);
@@ -68,17 +68,17 @@ public class MariaDbX509KeyManagerTest {
     assertNull(keyMger.chooseEngineServerAlias("RSA", null, null));
   }
 
-  private MariaDbX509KeyManager get()
+  private TiDBX509KeyManager get()
       throws KeyStoreException, CertificateException, IOException, NoSuchAlgorithmException {
     try (InputStream inStream =
-        MariaDbX509KeyManagerTest.class
+        TiDBX509KeyManagerTest.class
             .getClassLoader()
             .getResourceAsStream("testclient-keystore.p12")) {
       assertNotNull(inStream);
       char[] keyStorePasswordChars = "kspass".toCharArray();
       KeyStore ks = KeyStore.getInstance("PKCS12");
       ks.load(inStream, keyStorePasswordChars);
-      return new MariaDbX509KeyManager(ks, keyStorePasswordChars);
+      return new TiDBX509KeyManager(ks, keyStorePasswordChars);
     }
   }
 }

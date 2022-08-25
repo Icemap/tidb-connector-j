@@ -20,8 +20,8 @@ import java.util.TimeZone;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.MariaDbClob;
 import org.tidb.jdbc.Statement;
+import org.tidb.jdbc.TiDBClob;
 import org.tidb.jdbc.integration.Common;
 
 public class ClobCodecTest extends CommonCodecTest {
@@ -87,13 +87,13 @@ public class ClobCodecTest extends CommonCodecTest {
   }
 
   public void getObject(ResultSet rs) throws SQLException {
-    assertEquals(new MariaDbClob("0".getBytes()), rs.getObject(1, Clob.class));
+    assertEquals(new TiDBClob("0".getBytes()), rs.getObject(1, Clob.class));
     assertFalse(rs.wasNull());
-    assertEquals(new MariaDbClob("1".getBytes()), rs.getObject(2, Clob.class));
-    assertEquals(new MariaDbClob("1".getBytes()), rs.getObject("t2alias", Clob.class));
+    assertEquals(new TiDBClob("1".getBytes()), rs.getObject(2, Clob.class));
+    assertEquals(new TiDBClob("1".getBytes()), rs.getObject("t2alias", Clob.class));
     assertFalse(rs.wasNull());
     assertEquals(
-        new MariaDbClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getObject(3, Clob.class));
+        new TiDBClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getObject(3, Clob.class));
     assertFalse(rs.wasNull());
     assertNull(rs.getObject(4));
     assertTrue(rs.wasNull());
@@ -123,9 +123,9 @@ public class ClobCodecTest extends CommonCodecTest {
     testObject(rs, Byte.class, (byte) 0);
     testArrObject(rs, new byte[] {(byte) '0'});
     testObject(rs, Boolean.class, Boolean.FALSE);
-    testObject(rs, Clob.class, new MariaDbClob("0".getBytes()));
-    testObject(rs, NClob.class, new MariaDbClob("0".getBytes()));
-    testObject(rs, InputStream.class, new MariaDbClob("0".getBytes()).getBinaryStream());
+    testObject(rs, Clob.class, new TiDBClob("0".getBytes()));
+    testObject(rs, NClob.class, new TiDBClob("0".getBytes()));
+    testObject(rs, InputStream.class, new TiDBClob("0".getBytes()).getBinaryStream());
     testObject(rs, Reader.class, new StringReader("0"));
     rs.next();
     testObject(rs, LocalDate.class, LocalDate.parse("2011-01-01"));
@@ -698,12 +698,12 @@ public class ClobCodecTest extends CommonCodecTest {
   }
 
   public void getClob(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbClob("0".getBytes()), rs.getClob(1));
+    assertStreamEquals(new TiDBClob("0".getBytes()), rs.getClob(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getClob(2));
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getClob("t2alias"));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getClob(2));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getClob("t2alias"));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getClob(3));
+    assertStreamEquals(new TiDBClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getClob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getClob(4));
     assertTrue(rs.wasNull());
@@ -721,12 +721,12 @@ public class ClobCodecTest extends CommonCodecTest {
   }
 
   public void getNClob(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbClob("0".getBytes()), rs.getNClob(1));
+    assertStreamEquals(new TiDBClob("0".getBytes()), rs.getNClob(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getNClob(2));
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getNClob("t2alias"));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getNClob(2));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getNClob("t2alias"));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getNClob(3));
+    assertStreamEquals(new TiDBClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getNClob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getNClob(4));
     assertTrue(rs.wasNull());
@@ -775,13 +775,13 @@ public class ClobCodecTest extends CommonCodecTest {
     for (int i = 0; i < 20000; i++) {
       longDataSb.append('0' + i % 16);
     }
-    Clob longData = new MariaDbClob(longDataSb.toString().getBytes(StandardCharsets.UTF_8));
+    Clob longData = new TiDBClob(longDataSb.toString().getBytes(StandardCharsets.UTF_8));
     java.sql.Statement stmt = con.createStatement();
     stmt.execute("TRUNCATE TABLE ClobParamCodec");
 
     try (PreparedStatement prep =
         con.prepareStatement("INSERT INTO ClobParamCodec(t1) VALUES (?)")) {
-      prep.setClob(1, new MariaDbClob("e🌟£1".getBytes(StandardCharsets.UTF_8)));
+      prep.setClob(1, new TiDBClob("e🌟£1".getBytes(StandardCharsets.UTF_8)));
       prep.execute();
       prep.setClob(1, (Clob) null);
       prep.execute();
@@ -795,19 +795,19 @@ public class ClobCodecTest extends CommonCodecTest {
       prep.execute();
       prep.setObject(1, null, Types.VARCHAR);
       prep.execute();
-      prep.setObject(1, new MariaDbClob("e🌟56".getBytes(StandardCharsets.UTF_8)), Types.CLOB, 4);
+      prep.setObject(1, new TiDBClob("e🌟56".getBytes(StandardCharsets.UTF_8)), Types.CLOB, 4);
       prep.execute();
       prep.setObject(1, longData);
 
-      prep.setClob(1, new MariaDbClob("e🌟1".getBytes(StandardCharsets.UTF_8)));
+      prep.setClob(1, new TiDBClob("e🌟1".getBytes(StandardCharsets.UTF_8)));
       prep.addBatch();
-      prep.setClob(1, new MariaDbClob("e🌟1".getBytes(StandardCharsets.UTF_8)));
+      prep.setClob(1, new TiDBClob("e🌟1".getBytes(StandardCharsets.UTF_8)));
       prep.addBatch();
       prep.setClob(1, longData);
       prep.addBatch();
       prep.setClob(1, (Clob) null);
       prep.addBatch();
-      prep.setObject(1, new MariaDbClob("e🌟56".getBytes(StandardCharsets.UTF_8)), Types.CLOB, 4);
+      prep.setObject(1, new TiDBClob("e🌟56".getBytes(StandardCharsets.UTF_8)), Types.CLOB, 4);
       prep.addBatch();
       prep.executeBatch();
 
@@ -826,10 +826,10 @@ public class ClobCodecTest extends CommonCodecTest {
       prep.addBatch();
       prep.executeBatch();
 
-      prep.setNClob(1, new MariaDbClob("e🌟1".getBytes(StandardCharsets.UTF_8)));
+      prep.setNClob(1, new TiDBClob("e🌟1".getBytes(StandardCharsets.UTF_8)));
       prep.execute();
 
-      prep.setNClob(1, new MariaDbClob("e🌟145".getBytes(StandardCharsets.UTF_8)));
+      prep.setNClob(1, new TiDBClob("e🌟145".getBytes(StandardCharsets.UTF_8)));
       prep.execute();
 
       prep.setNCharacterStream(1, new StringReader("e🌟789"));
@@ -847,13 +847,13 @@ public class ClobCodecTest extends CommonCodecTest {
             .executeQuery("SELECT * FROM ClobParamCodec");
     assertTrue(rs.next());
     assertEquals("e🌟£1", rs.getString(2));
-    rs.updateClob(2, new MariaDbClob("f🌟10".getBytes(StandardCharsets.UTF_8)));
+    rs.updateClob(2, new TiDBClob("f🌟10".getBytes(StandardCharsets.UTF_8)));
     rs.updateRow();
     assertEquals("f🌟10", rs.getString(2));
 
     assertTrue(rs.next());
     assertNull(rs.getString(2));
-    rs.updateClob("t1", new MariaDbClob("f🌟15".getBytes(StandardCharsets.UTF_8)));
+    rs.updateClob("t1", new TiDBClob("f🌟15".getBytes(StandardCharsets.UTF_8)));
     rs.updateRow();
     assertEquals("f🌟15", rs.getString(2));
 
@@ -866,7 +866,7 @@ public class ClobCodecTest extends CommonCodecTest {
 
     assertTrue(rs.next());
     assertNull(rs.getString(2));
-    rs.updateObject("t1", new MariaDbClob("f🌟56".getBytes(StandardCharsets.UTF_8)), 4);
+    rs.updateObject("t1", new TiDBClob("f🌟56".getBytes(StandardCharsets.UTF_8)), 4);
     rs.updateRow();
     assertEquals("f🌟5", rs.getString(2));
 
@@ -929,13 +929,13 @@ public class ClobCodecTest extends CommonCodecTest {
 
     assertTrue(rs.next());
     assertEquals("e🌟1", rs.getString(2));
-    rs.updateNClob(2, new MariaDbClob("g🌟14".getBytes(StandardCharsets.UTF_8)));
+    rs.updateNClob(2, new TiDBClob("g🌟14".getBytes(StandardCharsets.UTF_8)));
     rs.updateRow();
     assertEquals("g🌟14", rs.getString(2));
 
     assertTrue(rs.next());
     assertEquals("e🌟145", rs.getString(2));
-    rs.updateNClob("t1", new MariaDbClob("h🌟14".getBytes(StandardCharsets.UTF_8)));
+    rs.updateNClob("t1", new TiDBClob("h🌟14".getBytes(StandardCharsets.UTF_8)));
     rs.updateRow();
     assertEquals("h🌟14", rs.getString(2));
 

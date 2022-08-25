@@ -17,9 +17,9 @@ import java.util.TimeZone;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.MariaDbBlob;
-import org.tidb.jdbc.MariaDbClob;
 import org.tidb.jdbc.Statement;
+import org.tidb.jdbc.TiDBBlob;
+import org.tidb.jdbc.TiDBClob;
 import org.tidb.jdbc.integration.Common;
 
 public class VarbinaryCodecTest extends CommonCodecTest {
@@ -115,9 +115,9 @@ public class VarbinaryCodecTest extends CommonCodecTest {
     testObject(rs, Byte.class, (byte) 0);
     testArrObject(rs, new byte[] {(byte) '0'});
     testObject(rs, Boolean.class, Boolean.FALSE);
-    testObject(rs, Clob.class, new MariaDbClob("0".getBytes()));
-    testObject(rs, NClob.class, new MariaDbClob("0".getBytes()));
-    testObject(rs, InputStream.class, new MariaDbClob("0".getBytes()).getBinaryStream());
+    testObject(rs, Clob.class, new TiDBClob("0".getBytes()));
+    testObject(rs, NClob.class, new TiDBClob("0".getBytes()));
+    testObject(rs, InputStream.class, new TiDBClob("0".getBytes()).getBinaryStream());
     testObject(rs, Reader.class, new StringReader("0"));
     rs.next();
     testObject(rs, LocalDate.class, LocalDate.parse("2011-01-01"));
@@ -644,12 +644,12 @@ public class VarbinaryCodecTest extends CommonCodecTest {
   }
 
   public void getBlob(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbBlob("0".getBytes()), rs.getBlob(1));
+    assertStreamEquals(new TiDBBlob("0".getBytes()), rs.getBlob(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbBlob("1".getBytes()), rs.getBlob(2));
-    assertStreamEquals(new MariaDbBlob("1".getBytes()), rs.getBlob("t2alias"));
+    assertStreamEquals(new TiDBBlob("1".getBytes()), rs.getBlob(2));
+    assertStreamEquals(new TiDBBlob("1".getBytes()), rs.getBlob("t2alias"));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbBlob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getBlob(3));
+    assertStreamEquals(new TiDBBlob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getBlob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getBlob(4));
     assertTrue(rs.wasNull());
@@ -667,12 +667,12 @@ public class VarbinaryCodecTest extends CommonCodecTest {
   }
 
   public void getClob(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbClob("0".getBytes()), rs.getClob(1));
+    assertStreamEquals(new TiDBClob("0".getBytes()), rs.getClob(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getClob(2));
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getClob("t2alias"));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getClob(2));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getClob("t2alias"));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getClob(3));
+    assertStreamEquals(new TiDBClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getClob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getClob(4));
     assertTrue(rs.wasNull());
@@ -690,12 +690,12 @@ public class VarbinaryCodecTest extends CommonCodecTest {
   }
 
   public void getNClob(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbClob("0".getBytes()), rs.getNClob(1));
+    assertStreamEquals(new TiDBClob("0".getBytes()), rs.getNClob(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getNClob(2));
-    assertStreamEquals(new MariaDbClob("1".getBytes()), rs.getNClob("t2alias"));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getNClob(2));
+    assertStreamEquals(new TiDBClob("1".getBytes()), rs.getNClob("t2alias"));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getNClob(3));
+    assertStreamEquals(new TiDBClob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getNClob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getNClob(4));
     assertTrue(rs.wasNull());

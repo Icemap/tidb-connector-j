@@ -16,7 +16,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.tidb.jdbc.client.Column;
 import org.tidb.jdbc.client.util.Parameter;
 import org.tidb.jdbc.client.util.Parameters;
-import org.tidb.jdbc.codec.*;
 import org.tidb.jdbc.codec.ParameterWithCal;
 import org.tidb.jdbc.export.ExceptionFactory;
 import org.tidb.jdbc.export.Prepare;
@@ -1258,7 +1257,7 @@ public abstract class BasePreparedStatement extends Statement implements Prepare
           setBytes(parameterIndex, (byte[]) obj);
           return;
         } else if (targetSqlType == Types.BLOB) {
-          setBlob(parameterIndex, new MariaDbBlob((byte[]) obj));
+          setBlob(parameterIndex, new TiDBBlob((byte[]) obj));
         } else {
           throw exceptionFactory()
               .create("Can only convert a byte[] to BINARY, VARBINARY, LONGVARBINARY or BLOB type");

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.MariaDbPoolDataSource;
+import org.tidb.jdbc.TiDBPoolDataSource;
 import org.tidb.jdbc.pool.PoolThreadFactory;
 import org.tidb.jdbc.pool.Pools;
 
@@ -56,17 +56,17 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void basic() throws SQLException {
-    MariaDbPoolDataSource ds = new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=2");
+    TiDBPoolDataSource ds = new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=2");
     testDs(ds);
     ds.close();
 
-    ds = new MariaDbPoolDataSource();
+    ds = new TiDBPoolDataSource();
     ds.setUrl(mDefUrl + "&maxPoolSize=2");
     testDs(ds);
     ds.close();
   }
 
-  private void testDs(MariaDbPoolDataSource ds) throws SQLException {
+  private void testDs(TiDBPoolDataSource ds) throws SQLException {
     try (Connection con1 = ds.getConnection()) {
       String threadId;
       try (org.tidb.jdbc.Connection con2 = (org.tidb.jdbc.Connection) ds.getConnection()) {
@@ -114,7 +114,7 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void basic2() throws SQLException {
-    MariaDbPoolDataSource ds = new MariaDbPoolDataSource();
+    TiDBPoolDataSource ds = new TiDBPoolDataSource();
     assertNull(ds.getUrl());
     assertNull(ds.getUser());
     assertEquals(30, ds.getLoginTimeout());
@@ -147,8 +147,7 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testDataSource() throws SQLException {
-    try (MariaDbPoolDataSource ds =
-        new MariaDbPoolDataSource(mDefUrl + "&allowPublicKeyRetrieval")) {
+    try (TiDBPoolDataSource ds = new TiDBPoolDataSource(mDefUrl + "&allowPublicKeyRetrieval")) {
       try (Connection connection = ds.getConnection()) {
         assertEquals(connection.isValid(0), true);
       }
@@ -168,7 +167,7 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testResetDatabase() throws SQLException {
-    try (MariaDbPoolDataSource pool = new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
+    try (TiDBPoolDataSource pool = new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
       try (Connection connection = pool.getConnection()) {
         Statement statement = connection.createStatement();
         statement.execute("CREATE DATABASE IF NOT EXISTS testingReset");
@@ -192,8 +191,8 @@ public class PoolDataSourceTest extends Common {
   }
 
   private void testResetSessionVariable(boolean useResetConnection) throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl + "&maxPoolSize=1&useResetConnection=" + useResetConnection)) {
 
       long nowMillis;
@@ -254,8 +253,8 @@ public class PoolDataSourceTest extends Common {
   }
 
   private void testResetUserVariable(boolean useResetConnection) throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl
                 + "&maxPoolSize=1&useResetConnection="
                 + useResetConnection
@@ -288,8 +287,8 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testNetworkTimeout() throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1&socketTimeout=10000")) {
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1&socketTimeout=10000")) {
       try (Connection connection = pool.getConnection()) {
         assertEquals(10_000, connection.getNetworkTimeout());
         connection.setNetworkTimeout(null, 5_000);
@@ -303,7 +302,7 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testResetReadOnly() throws SQLException {
-    try (MariaDbPoolDataSource pool = new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
+    try (TiDBPoolDataSource pool = new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
       try (Connection connection = pool.getConnection()) {
         assertFalse(connection.isReadOnly());
         connection.setReadOnly(true);
@@ -318,7 +317,7 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testResetAutoCommit() throws SQLException {
-    try (MariaDbPoolDataSource pool = new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
+    try (TiDBPoolDataSource pool = new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
       try (Connection connection = pool.getConnection()) {
         assertTrue(connection.getAutoCommit());
         connection.setAutoCommit(false);
@@ -333,8 +332,8 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testResetAutoCommitOption() throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1&autocommit=false&poolName=PoolTest")) {
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1&autocommit=false&poolName=PoolTest")) {
       assertTrue(pool.getPoolName().startsWith("PoolTest-"));
       try (Connection connection = pool.getConnection()) {
         assertFalse(connection.getAutoCommit());
@@ -350,7 +349,7 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testResetTransactionIsolation() throws SQLException {
-    try (MariaDbPoolDataSource pool = new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
+    try (TiDBPoolDataSource pool = new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
 
       try (Connection connection = pool.getConnection()) {
         assertEquals(Connection.TRANSACTION_REPEATABLE_READ, connection.getTransactionIsolation());
@@ -368,8 +367,8 @@ public class PoolDataSourceTest extends Common {
   public void testJmx() throws Exception {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     ObjectName filter = new ObjectName("org.tidb.jdbc.pool:type=PoolTestJmx-*");
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=5&minPoolSize=0&poolName=PoolTestJmx")) {
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=5&minPoolSize=0&poolName=PoolTestJmx")) {
       try (Connection connection = pool.getConnection()) {
         connection.isValid(1);
         Set<ObjectName> objectNames = server.queryNames(filter, null);
@@ -394,8 +393,8 @@ public class PoolDataSourceTest extends Common {
   public void testNoMinConnection() throws Exception {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     ObjectName filter = new ObjectName("org.tidb.jdbc.pool:type=testNoMinConnection-*");
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=5&poolName=testNoMinConnection")) {
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=5&poolName=testNoMinConnection")) {
       try (Connection connection = pool.getConnection()) {
         connection.isValid(1);
         Set<ObjectName> objectNames = server.queryNames(filter, null);
@@ -430,8 +429,8 @@ public class PoolDataSourceTest extends Common {
 
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     ObjectName filter = new ObjectName("org.tidb.jdbc.pool:type=testIdleTimeout-*");
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl
                 + "&maxPoolSize=5&minPoolSize=3&poolName=testIdleTimeout&testMinRemovalDelay=50&maxIdleTime=100")) {
       // wait to ensure pool has time to create 3 connections
@@ -453,8 +452,8 @@ public class PoolDataSourceTest extends Common {
   public void testMinConnection() throws Throwable {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     ObjectName filter = new ObjectName("org.tidb.jdbc.pool:type=testMinConnection-*");
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl
                 + "&maxPoolSize=5&minPoolSize=3&poolName=testMinConnection&testMinRemovalDelay=30&maxIdleTime=100")) {
       try (Connection connection = pool.getConnection()) {
@@ -499,8 +498,8 @@ public class PoolDataSourceTest extends Common {
   public void testJmxDisable() throws Exception {
     MBeanServer server = ManagementFactory.getPlatformMBeanServer();
     ObjectName filter = new ObjectName("org.tidb.jdbc.pool:type=PoolTest-*");
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl + "&maxPoolSize=2&registerJmxPool=false&poolName=PoolTest")) {
       try (Connection connection = pool.getConnection()) {
         connection.isValid(1);
@@ -513,7 +512,7 @@ public class PoolDataSourceTest extends Common {
   @Test
   public void testResetRollback() throws SQLException {
     sharedConn.createStatement().execute("FLUSH TABLES");
-    try (MariaDbPoolDataSource pool = new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
+    try (TiDBPoolDataSource pool = new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1")) {
       try (Connection connection = pool.getConnection()) {
         Statement stmt = connection.createStatement();
         stmt.executeUpdate("INSERT INTO testResetRollback (test) VALUES ('heja')");
@@ -573,8 +572,8 @@ public class PoolDataSourceTest extends Common {
     int initialConnection = getCurrentConnections();
     Assumptions.assumeFalse(initialConnection == -1);
 
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=10&minPoolSize=1")) {
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=10&minPoolSize=1")) {
 
       try (Connection connection = pool.getConnection()) {
         connection.isValid(10_000);
@@ -596,8 +595,8 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void wrongUrlHandling() throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             "jdbc:tidb://unknownHost/db?user=wrong&maxPoolSize=10&connectTimeout=500")) {
       long start = System.currentTimeMillis();
       try {
@@ -620,8 +619,8 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void testPrepareReset() throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl + "&maxPoolSize=1&useServerPrepStmts=true&useResetConnection")) {
       try (Connection connection = pool.getConnection()) {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT ?");
@@ -659,8 +658,8 @@ public class PoolDataSourceTest extends Common {
 
   @Test
   public void poolWithUser() throws SQLException {
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(
             mDefUrl + "&maxPoolSize=1&poolName=myPool&allowPublicKeyRetrieval")) {
       String threadId;
       try (Connection conn = pool.getConnection()) {
@@ -682,18 +681,16 @@ public class PoolDataSourceTest extends Common {
   @Test
   public void various() throws SQLException {
     assertThrowsContains(
-        SQLException.class,
-        () -> new MariaDbPoolDataSource("jdbc:notMariadb"),
-        "Wrong mariaDB url");
-    try (MariaDbPoolDataSource pool =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1&poolName=myPool&connectTimeout=2000")) {
-      assertNotNull(pool.unwrap(MariaDbPoolDataSource.class));
+        SQLException.class, () -> new TiDBPoolDataSource("jdbc:notMariadb"), "Wrong TiDB url");
+    try (TiDBPoolDataSource pool =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1&poolName=myPool&connectTimeout=2000")) {
+      assertNotNull(pool.unwrap(TiDBPoolDataSource.class));
       assertNotNull(pool.unwrap(ConnectionPoolDataSource.class));
       assertThrowsContains(
           SQLException.class,
           () -> pool.unwrap(String.class),
           "Datasource is not a wrapper for java.lang.String");
-      assertTrue(pool.isWrapperFor(MariaDbPoolDataSource.class));
+      assertTrue(pool.isWrapperFor(TiDBPoolDataSource.class));
       assertTrue(pool.isWrapperFor(ConnectionPoolDataSource.class));
       assertFalse(pool.isWrapperFor(String.class));
       pool.setLogWriter(null);
@@ -710,9 +707,9 @@ public class PoolDataSourceTest extends Common {
     // ensure all are closed
     Pools.close();
     Pools.close(null);
-    new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1&poolName=myPool");
+    new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1&poolName=myPool");
     Pools.close("myPool");
-    new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1&poolName=myPool");
+    new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1&poolName=myPool");
     Pools.close();
   }
 }

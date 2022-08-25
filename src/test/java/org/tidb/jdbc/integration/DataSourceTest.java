@@ -11,26 +11,26 @@ import javax.sql.DataSource;
 import javax.sql.PooledConnection;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.MariaDbDataSource;
+import org.tidb.jdbc.TiDBDataSource;
 
 public class DataSourceTest extends Common {
 
   @Test
   public void basic() throws SQLException {
-    MariaDbDataSource ds = new MariaDbDataSource(mDefUrl);
+    TiDBDataSource ds = new TiDBDataSource(mDefUrl);
     testDs(ds);
 
-    ds = new MariaDbDataSource();
+    ds = new TiDBDataSource();
     ds.setUrl(mDefUrl);
     testDs(ds);
 
-    ds = new MariaDbDataSource();
+    ds = new TiDBDataSource();
     ds.setPassword("ttt");
     ds.setUrl(mDefUrl);
     assertThrows(SQLException.class, ds::getConnection);
   }
 
-  private void testDs(MariaDbDataSource ds) throws SQLException {
+  private void testDs(TiDBDataSource ds) throws SQLException {
     try (Connection con1 = ds.getConnection()) {
       try (Connection con2 = ds.getConnection()) {
 
@@ -70,7 +70,7 @@ public class DataSourceTest extends Common {
 
   @Test
   public void basic2() throws SQLException {
-    MariaDbDataSource ds = new MariaDbDataSource();
+    TiDBDataSource ds = new TiDBDataSource();
     assertNull(ds.getUrl());
     assertNull(ds.getUser());
     assertEquals(30, ds.getLoginTimeout());
@@ -117,7 +117,7 @@ public class DataSourceTest extends Common {
     stmt.execute("GRANT SELECT ON " + sharedConn.getCatalog() + ".* TO 'dsUser'@'%'");
     stmt.execute("FLUSH PRIVILEGES");
 
-    DataSource ds = new MariaDbDataSource(mDefUrl + "&allowPublicKeyRetrieval");
+    DataSource ds = new TiDBDataSource(mDefUrl + "&allowPublicKeyRetrieval");
     try (Connection con1 = ds.getConnection()) {
       try (Connection con2 = ds.getConnection("dsUser", "MySup8%rPassw@ord")) {
         ResultSet rs1 = con1.createStatement().executeQuery("SELECT 1");
@@ -147,21 +147,21 @@ public class DataSourceTest extends Common {
 
   @Test
   public void exceptions() throws SQLException {
-    DataSource ds = new MariaDbDataSource(mDefUrl);
+    DataSource ds = new TiDBDataSource(mDefUrl);
     ds.unwrap(javax.sql.DataSource.class);
-    ds.unwrap(MariaDbDataSource.class);
+    ds.unwrap(TiDBDataSource.class);
     assertThrowsContains(
         SQLException.class,
         () -> ds.unwrap(String.class),
         "Datasource is not a wrapper for java.lang.String");
 
     assertTrue(ds.isWrapperFor(javax.sql.DataSource.class));
-    assertTrue(ds.isWrapperFor(MariaDbDataSource.class));
+    assertTrue(ds.isWrapperFor(TiDBDataSource.class));
     assertFalse(ds.isWrapperFor(String.class));
     assertThrowsContains(
         SQLException.class,
-        () -> new MariaDbDataSource("jdbc:wrongUrl"),
-        "Wrong mariaDB url: jdbc:wrongUrl");
+        () -> new TiDBDataSource("jdbc:wrongUrl"),
+        "Wrong TiDB url: jdbc:wrongUrl");
     assertNull(ds.getLogWriter());
     assertNull(ds.getParentLogger());
     ds.setLogWriter(null);

@@ -48,7 +48,7 @@ Java 8 以上 :
 - [x] 去除关于 `READ_UNCOMMITTED` / `SERIALIZABLE` 事务隔离级别的代码及测试用例。
 - [x] 去除关于 `XA` 的代码及测试用例。
 - [x] 修复 major, minor, patch 版本的获取逻辑。
-- [ ] 与 TiDB 集成构建 CI。
+- [x] 与 TiDB 集成构建 CI。
 - [x] 支持 TiDB 的关闭连接 (使用 `KILL TIDB xxx` 语句)。
 - [ ] 支持 TiDB 的高可用。
 - [ ] 支持 TiDB 的 [乐观事务和悲观事务](https://docs.pingcap.com/zh/tidb/stable/dev-guide-optimistic-and-pessimistic-transaction)。

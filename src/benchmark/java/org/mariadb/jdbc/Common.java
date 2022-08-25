@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: LGPL-2.1-or-later
-// Copyright (c) 2012-2014 Monty Program Ab
-// Copyright (c) 2015-2021 MariaDB Corporation Ab
-
 package org.tidb.jdbc;
 
 import org.openjdk.jmh.annotations.*;
@@ -40,23 +36,13 @@ public class Common {
     protected Connection connectionText;
     protected Connection connectionBinary;
 
-    @Param({"mysql", "mariadb"})
+    @Param({"tidb"})
     String driver;
 
     @Setup(Level.Trial)
     public void createConnections() throws Exception {
 
-      String className;
-      switch (driver) {
-        case "mysql":
-          className = "com.mysql.cj.jdbc.Driver";
-          break;
-        case "mariadb":
-          className = "org.tidb.jdbc.Driver";
-          break;
-        default:
-          throw new RuntimeException("wrong param");
-      }
+      String className = "org.tidb.jdbc.Driver";
       try {
         String jdbcBase = "jdbc:%s://%s:%s/%s?user=%s&password=%s&sslMode=DISABLED&useServerPrepStmts=%s&cachePrepStmts=%s&serverTimezone=UTC%s";
         String jdbcUrlText =

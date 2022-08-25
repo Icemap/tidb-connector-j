@@ -89,7 +89,7 @@ public final class Capabilities {
   public static final long PROGRESS = 1L << 32;
 
   /** not used anymore - reserved */
-  public static final long MARIADB_RESERVED = 1L << 33;
+  public static final long TIDB_RESERVED = 1L << 33;
 
   /** permit COM_STMT_BULK commands */
   public static final long STMT_BULK_OPERATIONS = 1L << 34;

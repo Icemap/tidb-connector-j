@@ -90,7 +90,7 @@ public final class HandshakeResponse implements ClientMessage {
     PacketWriter tmpWriter = new PacketWriter(null, 0, 0, null, null);
     tmpWriter.pos(0);
     writeStringLengthAscii(tmpWriter, _CLIENT_NAME);
-    writeStringLength(tmpWriter, "MariaDB Connector/J");
+    writeStringLength(tmpWriter, "TiDB Connector/J");
 
     writeStringLengthAscii(tmpWriter, _CLIENT_VERSION);
     writeStringLength(tmpWriter, VersionFactory.getInstance().getVersion());

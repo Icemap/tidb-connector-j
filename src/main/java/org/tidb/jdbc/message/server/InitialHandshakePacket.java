@@ -88,7 +88,7 @@ public final class InitialHandshakePacket implements ServerMessage {
 
     // MariaDB additional capabilities.
     // Filled only if MariaDB server 10.2+
-    long mariaDbAdditionalCapacities = reader.readInt();
+    long tidbAdditionalCapacities = reader.readInt();
     byte[] seed;
     if ((serverCapabilities4FirstBytes & Capabilities.SECURE_CONNECTION) != 0) {
       final byte[] seed2;

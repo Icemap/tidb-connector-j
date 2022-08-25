@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 /** MariaDB Blob implementation */
-public class MariaDbBlob implements Blob, Serializable {
+public class TiDBBlob implements Blob, Serializable {
 
   private static final long serialVersionUID = -4736603161284649490L;
 
@@ -24,7 +24,7 @@ public class MariaDbBlob implements Blob, Serializable {
   protected transient int length;
 
   /** Creates an empty blob. */
-  public MariaDbBlob() {
+  public TiDBBlob() {
     data = new byte[0];
     offset = 0;
     length = 0;
@@ -35,7 +35,7 @@ public class MariaDbBlob implements Blob, Serializable {
    *
    * @param bytes the content for the blob.
    */
-  public MariaDbBlob(byte[] bytes) {
+  public TiDBBlob(byte[] bytes) {
     if (bytes == null) {
       throw new IllegalArgumentException("byte array is null");
     }
@@ -51,7 +51,7 @@ public class MariaDbBlob implements Blob, Serializable {
    * @param offset offset
    * @param length length
    */
-  public MariaDbBlob(byte[] bytes, int offset, int length) {
+  public TiDBBlob(byte[] bytes, int offset, int length) {
     if (bytes == null) {
       throw new IllegalArgumentException("byte array is null");
     }
@@ -60,7 +60,7 @@ public class MariaDbBlob implements Blob, Serializable {
     this.length = Math.min(bytes.length - offset, length);
   }
 
-  private MariaDbBlob(int offset, int length, byte[] bytes) {
+  private TiDBBlob(int offset, int length, byte[] bytes) {
     this.data = bytes;
     this.offset = offset;
     this.length = length;
@@ -74,8 +74,8 @@ public class MariaDbBlob implements Blob, Serializable {
    * @param length data length
    * @return new Blob
    */
-  public static MariaDbBlob safeMariaDbBlob(byte[] bytes, int offset, int length) {
-    return new MariaDbBlob(offset, length, bytes);
+  public static TiDBBlob safeTiDBBlob(byte[] bytes, int offset, int length) {
+    return new TiDBBlob(offset, length, bytes);
   }
 
   /**
@@ -361,7 +361,7 @@ public class MariaDbBlob implements Blob, Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    MariaDbBlob that = (MariaDbBlob) o;
+    TiDBBlob that = (TiDBBlob) o;
 
     if (length != that.length) return false;
 
@@ -381,10 +381,10 @@ public class MariaDbBlob implements Blob, Serializable {
 
   static class BlobOutputStream extends OutputStream {
 
-    private final MariaDbBlob blob;
+    private final TiDBBlob blob;
     private int pos;
 
-    public BlobOutputStream(MariaDbBlob blob, int pos) {
+    public BlobOutputStream(TiDBBlob blob, int pos) {
       this.blob = blob;
       this.pos = pos;
     }

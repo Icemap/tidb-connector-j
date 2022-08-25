@@ -20,8 +20,8 @@ import java.util.UUID;
 import javax.net.ssl.*;
 import org.tidb.jdbc.Configuration;
 import org.tidb.jdbc.client.tls.HostnameVerifier;
-import org.tidb.jdbc.client.tls.MariaDbX509KeyManager;
-import org.tidb.jdbc.client.tls.MariaDbX509TrustingManager;
+import org.tidb.jdbc.client.tls.TiDBX509KeyManager;
+import org.tidb.jdbc.client.tls.TiDBX509TrustingManager;
 import org.tidb.jdbc.export.ExceptionFactory;
 import org.tidb.jdbc.export.SslMode;
 import org.tidb.jdbc.plugin.TlsSocketPlugin;
@@ -46,7 +46,7 @@ public class DefaultTlsSocketPlugin implements TlsSocketPlugin {
         KeyStore ks =
             KeyStore.getInstance(storeType != null ? storeType : KeyStore.getDefaultType());
         ks.load(inStream, keyStorePasswordChars);
-        return new MariaDbX509KeyManager(ks, keyStorePasswordChars);
+        return new TiDBX509KeyManager(ks, keyStorePasswordChars);
       }
     } catch (IOException | GeneralSecurityException ex) {
       throw exceptionFactory.create(
@@ -75,7 +75,7 @@ public class DefaultTlsSocketPlugin implements TlsSocketPlugin {
     KeyManager[] keyManager = null;
 
     if (conf.sslMode() == SslMode.TRUST) {
-      trustManager = new X509TrustManager[] {new MariaDbX509TrustingManager()};
+      trustManager = new X509TrustManager[] {new TiDBX509TrustingManager()};
     } else { // if certificate is provided, load it.
       // if not, relying on default truststore
       if (conf.serverSslCert() != null) {

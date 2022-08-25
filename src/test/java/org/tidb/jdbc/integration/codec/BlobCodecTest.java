@@ -16,8 +16,8 @@ import java.util.Arrays;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.MariaDbBlob;
 import org.tidb.jdbc.Statement;
+import org.tidb.jdbc.TiDBBlob;
 import org.tidb.jdbc.client.result.CompleteResult;
 import org.tidb.jdbc.integration.Common;
 
@@ -92,13 +92,13 @@ public class BlobCodecTest extends CommonCodecTest {
   }
 
   public void getObject(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbBlob("0".getBytes()), (Blob) rs.getObject(1));
+    assertStreamEquals(new TiDBBlob("0".getBytes()), (Blob) rs.getObject(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbBlob("1".getBytes()), (Blob) rs.getObject(2));
-    assertStreamEquals(new MariaDbBlob("1".getBytes()), (Blob) rs.getObject("t2alias"));
+    assertStreamEquals(new TiDBBlob("1".getBytes()), (Blob) rs.getObject(2));
+    assertStreamEquals(new TiDBBlob("1".getBytes()), (Blob) rs.getObject("t2alias"));
     assertFalse(rs.wasNull());
     assertStreamEquals(
-        new MariaDbBlob("some🌟".getBytes(StandardCharsets.UTF_8)), (Blob) rs.getObject(3));
+        new TiDBBlob("some🌟".getBytes(StandardCharsets.UTF_8)), (Blob) rs.getObject(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getObject(4));
     assertTrue(rs.wasNull());
@@ -129,7 +129,7 @@ public class BlobCodecTest extends CommonCodecTest {
     testErrObject(rs, Boolean.class);
     testErrObject(rs, Clob.class);
     testErrObject(rs, NClob.class);
-    testObject(rs, InputStream.class, new MariaDbBlob("0".getBytes()).getBinaryStream());
+    testObject(rs, InputStream.class, new TiDBBlob("0".getBytes()).getBinaryStream());
     testErrObject(rs, Reader.class);
     rs.next();
     testErrObject(rs, LocalDate.class);
@@ -606,12 +606,12 @@ public class BlobCodecTest extends CommonCodecTest {
   }
 
   public void getBlob(ResultSet rs) throws Exception {
-    assertStreamEquals(new MariaDbBlob("0".getBytes()), rs.getBlob(1));
+    assertStreamEquals(new TiDBBlob("0".getBytes()), rs.getBlob(1));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbBlob("1".getBytes()), rs.getBlob(2));
-    assertStreamEquals(new MariaDbBlob("1".getBytes()), rs.getBlob("t2alias"));
+    assertStreamEquals(new TiDBBlob("1".getBytes()), rs.getBlob(2));
+    assertStreamEquals(new TiDBBlob("1".getBytes()), rs.getBlob("t2alias"));
     assertFalse(rs.wasNull());
-    assertStreamEquals(new MariaDbBlob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getBlob(3));
+    assertStreamEquals(new TiDBBlob("some🌟".getBytes(StandardCharsets.UTF_8)), rs.getBlob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getBlob(4));
     assertTrue(rs.wasNull());
@@ -696,27 +696,27 @@ public class BlobCodecTest extends CommonCodecTest {
     try (PreparedStatement prep = con.prepareStatement("INSERT INTO BlobCodec2(t1) VALUES (?)")) {
       prep.setBlob(1, (Blob) null);
       prep.execute();
-      prep.setBlob(1, new MariaDbBlob("e🌟1".getBytes(StandardCharsets.UTF_8)));
+      prep.setBlob(1, new TiDBBlob("e🌟1".getBytes(StandardCharsets.UTF_8)));
       prep.execute();
       prep.setBlob(1, (Blob) null);
       prep.execute();
       prep.setNull(1, Types.BLOB);
       prep.execute();
 
-      prep.setObject(1, new MariaDbBlob("e🌟2".getBytes(StandardCharsets.UTF_8)));
+      prep.setObject(1, new TiDBBlob("e🌟2".getBytes(StandardCharsets.UTF_8)));
       prep.execute();
-      prep.setObject(1, new MariaDbBlob("e🌟2".getBytes(StandardCharsets.UTF_8)), Types.BLOB, 5);
+      prep.setObject(1, new TiDBBlob("e🌟2".getBytes(StandardCharsets.UTF_8)), Types.BLOB, 5);
       prep.execute();
       prep.setObject(1, null);
       prep.execute();
-      prep.setObject(1, new MariaDbBlob("e🌟3".getBytes(StandardCharsets.UTF_8)), Types.BLOB);
+      prep.setObject(1, new TiDBBlob("e🌟3".getBytes(StandardCharsets.UTF_8)), Types.BLOB);
       prep.execute();
       prep.setObject(1, null, Types.BLOB);
       prep.execute();
 
-      prep.setObject(1, new MariaDbBlob("e🌟4".getBytes(StandardCharsets.UTF_8)));
+      prep.setObject(1, new TiDBBlob("e🌟4".getBytes(StandardCharsets.UTF_8)));
       prep.addBatch();
-      prep.setObject(1, new MariaDbBlob("e🌟56".getBytes(StandardCharsets.UTF_8)), Types.BLOB, 6);
+      prep.setObject(1, new TiDBBlob("e🌟56".getBytes(StandardCharsets.UTF_8)), Types.BLOB, 6);
       prep.addBatch();
       prep.executeBatch();
 
@@ -791,7 +791,7 @@ public class BlobCodecTest extends CommonCodecTest {
 
     assertTrue(rs.next());
     assertNull(rs.getBlob(2));
-    rs.updateBlob(2, new MariaDbBlob("g🌟1".getBytes(StandardCharsets.UTF_8)));
+    rs.updateBlob(2, new TiDBBlob("g🌟1".getBytes(StandardCharsets.UTF_8)));
     rs.updateRow();
     assertArrayEquals(
         "g🌟1".getBytes(StandardCharsets.UTF_8),
@@ -799,7 +799,7 @@ public class BlobCodecTest extends CommonCodecTest {
 
     assertTrue(rs.next());
     assertNull(rs.getBlob(2));
-    rs.updateBlob("t1", new MariaDbBlob("f🌟1".getBytes(StandardCharsets.UTF_8)));
+    rs.updateBlob("t1", new TiDBBlob("f🌟1".getBytes(StandardCharsets.UTF_8)));
     rs.updateRow();
     assertArrayEquals(
         "f🌟1".getBytes(StandardCharsets.UTF_8),
@@ -817,7 +817,7 @@ public class BlobCodecTest extends CommonCodecTest {
     assertArrayEquals(
         "e🌟".getBytes(StandardCharsets.UTF_8),
         rs.getBlob(2).getBytes(1, (int) rs.getBlob(2).length()));
-    rs.updateObject(2, new MariaDbBlob("f🌟2".getBytes(StandardCharsets.UTF_8)), 5);
+    rs.updateObject(2, new TiDBBlob("f🌟2".getBytes(StandardCharsets.UTF_8)), 5);
     rs.updateRow();
     assertArrayEquals(
         "f🌟".getBytes(StandardCharsets.UTF_8),

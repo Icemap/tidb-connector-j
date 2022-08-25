@@ -48,7 +48,7 @@ For a Getting started guide, API docs, recipes, etc. see here:
 - [x] Remove codes and test cases about `READ_UNCOMMITTED` / `SERIALIZABLE` transaction isolation.
 - [x] Remove codes and test cases about `XA`.
 - [x] Repair `major`, `minor`, `patch` version get logic.
-- [ ] Build CI for TiDB.
+- [x] Build CI for TiDB.
 - [x] Support close connection for TiDB (Use `KILL TIDB xxx` statement).
 - [ ] Support HA for TiDB.
 - [ ] Support [Optimistic Transactions and Pessimistic Transactions](https://docs.pingcap.com/tidb/stable/dev-guide-optimistic-and-pessimistic-transaction) for TiDB.

@@ -13,7 +13,7 @@ import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.EnumSet;
-import org.tidb.jdbc.MariaDbBlob;
+import org.tidb.jdbc.TiDBBlob;
 import org.tidb.jdbc.client.Column;
 import org.tidb.jdbc.client.Context;
 import org.tidb.jdbc.client.DataType;
@@ -111,7 +111,7 @@ public class BlobCodec implements Codec<Blob> {
                   "Data type %s (not binary) cannot be decoded as Blob", column.getType()));
         }
         buf.skip(length);
-        return new MariaDbBlob(buf.buf(), buf.pos() - length, length);
+        return new TiDBBlob(buf.buf(), buf.pos() - length, length);
 
       default:
         buf.skip(length);

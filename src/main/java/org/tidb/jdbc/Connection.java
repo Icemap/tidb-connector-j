@@ -46,7 +46,7 @@ public class Connection implements java.sql.Connection {
   private final boolean canUseServerMaxRows;
   private final int defaultFetchSize;
   private final boolean forceTransactionEnd;
-  private MariaDbPoolConnection poolConnection;
+  private TiDBPoolConnection poolConnection;
 
   /**
    * Connection construction.
@@ -73,7 +73,7 @@ public class Connection implements java.sql.Connection {
    *
    * @param poolConnection PoolConnection
    */
-  public void setPoolConnection(MariaDbPoolConnection poolConnection) {
+  public void setPoolConnection(TiDBPoolConnection poolConnection) {
     this.poolConnection = poolConnection;
     this.exceptionFactory = exceptionFactory.setPoolConnection(poolConnection);
   }
@@ -461,7 +461,7 @@ public class Connection implements java.sql.Connection {
       throw exceptionFactory().notSupported("TiDB support savepoint at 6.0.2 version");
     }
 
-    MariaDbSavepoint savepoint = new MariaDbSavepoint(savepointId.incrementAndGet());
+    TiDBSavepoint savepoint = new TiDBSavepoint(savepointId.incrementAndGet());
     client.execute(new QueryPacket("SAVEPOINT `" + savepoint.rawValue() + "`"), true);
     return savepoint;
   }
@@ -472,7 +472,7 @@ public class Connection implements java.sql.Connection {
       throw exceptionFactory().notSupported("TiDB support savepoint at 6.0.2 version");
     }
 
-    MariaDbSavepoint savepoint = new MariaDbSavepoint(name.replace("`", "``"));
+    TiDBSavepoint savepoint = new TiDBSavepoint(name.replace("`", "``"));
     client.execute(new QueryPacket("SAVEPOINT `" + savepoint.rawValue() + "`"), true);
     return savepoint;
   }
@@ -487,12 +487,10 @@ public class Connection implements java.sql.Connection {
     lock.lock();
     try {
       if ((client.getContext().getServerStatus() & ServerStatus.IN_TRANSACTION) > 0) {
-        if (savepoint instanceof Connection.MariaDbSavepoint) {
+        if (savepoint instanceof TiDBSavepoint) {
           client.execute(
               new QueryPacket(
-                  "ROLLBACK TO SAVEPOINT `"
-                      + ((Connection.MariaDbSavepoint) savepoint).rawValue()
-                      + "`"),
+                  "ROLLBACK TO SAVEPOINT `" + ((TiDBSavepoint) savepoint).rawValue() + "`"),
               true);
         } else {
           throw exceptionFactory.create("Unknown savepoint type");
@@ -513,12 +511,9 @@ public class Connection implements java.sql.Connection {
     lock.lock();
     try {
       if ((client.getContext().getServerStatus() & ServerStatus.IN_TRANSACTION) > 0) {
-        if (savepoint instanceof Connection.MariaDbSavepoint) {
+        if (savepoint instanceof TiDBSavepoint) {
           client.execute(
-              new QueryPacket(
-                  "RELEASE SAVEPOINT `"
-                      + ((Connection.MariaDbSavepoint) savepoint).rawValue()
-                      + "`"),
+              new QueryPacket("RELEASE SAVEPOINT `" + ((TiDBSavepoint) savepoint).rawValue() + "`"),
               true);
         } else {
           throw exceptionFactory.create("Unknown savepoint type");
@@ -580,17 +575,17 @@ public class Connection implements java.sql.Connection {
 
   @Override
   public Clob createClob() {
-    return new MariaDbClob();
+    return new TiDBClob();
   }
 
   @Override
   public Blob createBlob() {
-    return new MariaDbBlob();
+    return new TiDBBlob();
   }
 
   @Override
   public NClob createNClob() {
-    return new MariaDbClob();
+    return new TiDBClob();
   }
 
   @Override
@@ -615,7 +610,7 @@ public class Connection implements java.sql.Connection {
       return true;
     } catch (SQLException sqle) {
       if (poolConnection != null) {
-        MariaDbPoolConnection poolConnection = this.poolConnection;
+        TiDBPoolConnection poolConnection = this.poolConnection;
         poolConnection.fireConnectionErrorOccurred(sqle);
         poolConnection.close();
       }
@@ -670,7 +665,7 @@ public class Connection implements java.sql.Connection {
   @Override
   public void abort(Executor executor) throws SQLException {
     if (poolConnection != null) {
-      MariaDbPoolConnection poolConnection = this.poolConnection;
+      TiDBPoolConnection poolConnection = this.poolConnection;
       poolConnection.close();
       return;
     }
@@ -725,17 +720,17 @@ public class Connection implements java.sql.Connection {
   }
 
   /** Internal Savepoint implementation */
-  class MariaDbSavepoint implements java.sql.Savepoint {
+  class TiDBSavepoint implements java.sql.Savepoint {
 
     private final String name;
     private final Integer id;
 
-    public MariaDbSavepoint(final String name) {
+    public TiDBSavepoint(final String name) {
       this.name = name;
       this.id = null;
     }
 
-    public MariaDbSavepoint(final int savepointId) {
+    public TiDBSavepoint(final int savepointId) {
       this.id = savepointId;
       this.name = null;
     }

@@ -5,7 +5,7 @@
 package org.tidb.jdbc.client.impl;
 
 import java.nio.charset.StandardCharsets;
-import org.tidb.jdbc.MariaDbBlob;
+import org.tidb.jdbc.TiDBBlob;
 import org.tidb.jdbc.client.ReadableByteBuf;
 
 /** Packet buffer */
@@ -57,9 +57,9 @@ public final class StandardReadableByteBuf implements ReadableByteBuf {
     pos += length;
   }
 
-  public MariaDbBlob readBlob(int length) {
+  public TiDBBlob readBlob(int length) {
     pos += length;
-    return MariaDbBlob.safeMariaDbBlob(buf, pos - length, length);
+    return TiDBBlob.safeTiDBBlob(buf, pos - length, length);
   }
 
   public byte getByte() {
