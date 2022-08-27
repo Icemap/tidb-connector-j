@@ -6,13 +6,13 @@ package org.tidb.jdbc.pool;
 
 import java.util.concurrent.atomic.AtomicLong;
 import org.tidb.jdbc.Connection;
-import org.tidb.jdbc.MariaDbPoolConnection;
+import org.tidb.jdbc.TiDBPoolConnection;
 
 /**
- * MariaDB pool connection for internal pool permit to add a last used information, to remove
+ * TiDB pool connection for internal pool permit to add a last used information, to remove
  * connection after staying in pool for long time.
  */
-public class MariaDbInnerPoolConnection extends MariaDbPoolConnection {
+public class TiDBInnerPoolConnection extends TiDBPoolConnection {
   private final AtomicLong lastUsed;
 
   /**
@@ -20,7 +20,7 @@ public class MariaDbInnerPoolConnection extends MariaDbPoolConnection {
    *
    * @param connection connection to retrieve connection options
    */
-  public MariaDbInnerPoolConnection(Connection connection) {
+  public TiDBInnerPoolConnection(Connection connection) {
     super(connection);
     lastUsed = new AtomicLong(System.nanoTime());
   }

@@ -4,7 +4,7 @@
 
 package org.tidb.jdbc.client;
 
-import org.tidb.jdbc.MariaDbBlob;
+import org.tidb.jdbc.TiDBBlob;
 
 /** Packet buffer interface */
 public interface ReadableByteBuf {
@@ -62,7 +62,7 @@ public interface ReadableByteBuf {
    * @param length blob length
    * @return Blob
    */
-  MariaDbBlob readBlob(int length);
+  TiDBBlob readBlob(int length);
 
   /**
    * Read byte from buffer at current position, without changing position

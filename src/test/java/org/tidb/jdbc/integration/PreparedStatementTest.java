@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import org.junit.jupiter.api.*;
 import org.tidb.jdbc.Connection;
-import org.tidb.jdbc.MariaDbBlob;
 import org.tidb.jdbc.Statement;
+import org.tidb.jdbc.TiDBBlob;
 
 public class PreparedStatementTest extends Common {
 
@@ -1033,7 +1033,7 @@ public class PreparedStatementTest extends Common {
               + "{sql:'INSERT INTO prepare1(t1, t2) VALUES (?,?)', parameters:[null,_binary 'ab']}",
           preparedStatement.toString());
 
-      preparedStatement.setBlob(1, new MariaDbBlob(new byte[] {0, 1, 2, 3, 4, 5}));
+      preparedStatement.setBlob(1, new TiDBBlob(new byte[] {0, 1, 2, 3, 4, 5}));
       preparedStatement.setAsciiStream(2, new ByteArrayInputStream("test3".getBytes()));
       assertEquals(
           prefix

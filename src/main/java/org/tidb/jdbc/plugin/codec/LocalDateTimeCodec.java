@@ -35,7 +35,7 @@ public class LocalDateTimeCodec implements Codec<LocalDateTime> {
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   /** formatter */
-  public static final DateTimeFormatter MARIADB_LOCAL_DATE_TIME;
+  public static final DateTimeFormatter TIDB_LOCAL_DATE_TIME;
 
   private static final EnumSet<DataType> COMPATIBLE_TYPES =
       EnumSet.of(
@@ -53,7 +53,7 @@ public class LocalDateTimeCodec implements Codec<LocalDateTime> {
           DataType.LONGBLOB);
 
   static {
-    MARIADB_LOCAL_DATE_TIME =
+    TIDB_LOCAL_DATE_TIME =
         new DateTimeFormatterBuilder()
             .parseCaseInsensitive()
             .append(DateTimeFormatter.ISO_LOCAL_DATE)

@@ -38,18 +38,18 @@ public enum DataType {
   static {
     typeMap = new DataType[256];
     for (DataType v : values()) {
-      typeMap[v.mariadbType] = v;
+      typeMap[v.tidbType] = v;
     }
   }
 
-  private final int mariadbType;
+  private final int tidbType;
 
-  DataType(int mariadbType) {
-    this.mariadbType = mariadbType;
+  DataType(int tidbType) {
+    this.tidbType = tidbType;
   }
 
   public int get() {
-    return mariadbType;
+    return tidbType;
   }
 
   public static DataType of(int typeValue) {

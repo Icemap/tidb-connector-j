@@ -4,48 +4,52 @@
 
 package org.tidb.jdbc;
 
-import java.io.Closeable;
 import java.io.PrintWriter;
+import java.sql.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.SQLTimeoutException;
-import java.util.List;
 import java.util.logging.Logger;
 import javax.sql.*;
-import org.tidb.jdbc.pool.Pool;
-import org.tidb.jdbc.pool.Pools;
 
-/** MariaDB pool datasource. This use mariadb internal pool. */
-public class MariaDbPoolDataSource
-    implements DataSource, ConnectionPoolDataSource, Closeable, AutoCloseable {
+/** TiDB basic datasource */
+public class TiDBDataSource implements DataSource, ConnectionPoolDataSource {
 
-  private Pool pool;
+  /** configuration */
   private Configuration conf = null;
+
+  /** url permitting creating configuration */
   private String url = null;
+
+  /** username */
   private String user = null;
+
+  /** password */
   private String password = null;
+
+  /** connect timeout */
   private Integer loginTimeout = null;
 
-  /** Constructor */
-  public MariaDbPoolDataSource() {}
+  /** Basic constructor */
+  public TiDBDataSource() {}
 
   /**
-   * Constructor with url
+   * Constructor with URL
    *
    * @param url connection string
-   * @throws SQLException if configuration fails
+   * @throws SQLException if url is not supported
    */
-  public MariaDbPoolDataSource(String url) throws SQLException {
+  public TiDBDataSource(String url) throws SQLException {
     if (Configuration.acceptsUrl(url)) {
       this.url = url;
-      conf = Configuration.parse(url);
-      pool = Pools.retrievePool(conf);
     } else {
-      throw new SQLException(String.format("Wrong mariaDB url: %s", url));
+      throw new SQLException(String.format("Wrong TiDB url: %s", url));
     }
   }
 
+  /**
+   * Create configuration from url/user/password/loginTimeout
+   *
+   * @throws SQLException if not supported
+   */
   private void config() throws SQLException {
     if (url == null) throw new SQLException("url not set");
     conf = Configuration.parse(url);
@@ -59,8 +63,6 @@ public class MariaDbPoolDataSource
     if (password != null) {
       password = conf.password();
     }
-
-    pool = Pools.retrievePool(conf);
   }
 
   /**
@@ -76,7 +78,7 @@ public class MariaDbPoolDataSource
   @Override
   public Connection getConnection() throws SQLException {
     if (conf == null) config();
-    return pool.getPoolConnection().getConnection();
+    return org.tidb.jdbc.Driver.connect(conf);
   }
 
   /**
@@ -94,7 +96,8 @@ public class MariaDbPoolDataSource
   @Override
   public Connection getConnection(String username, String password) throws SQLException {
     if (conf == null) config();
-    return pool.getPoolConnection(username, password).getConnection();
+    Configuration conf = this.conf.clone(username, password);
+    return org.tidb.jdbc.Driver.connect(conf);
   }
 
   /**
@@ -205,14 +208,15 @@ public class MariaDbPoolDataSource
   @Override
   public PooledConnection getPooledConnection() throws SQLException {
     if (conf == null) config();
-    return pool.getPoolConnection();
+    return new TiDBPoolConnection(org.tidb.jdbc.Driver.connect(conf));
   }
 
   @Override
   public PooledConnection getPooledConnection(String username, String password)
       throws SQLException {
     if (conf == null) config();
-    return pool.getPoolConnection(username, password);
+    Configuration conf = this.conf.clone(username, password);
+    return new TiDBPoolConnection(org.tidb.jdbc.Driver.connect(conf));
   }
 
   /**
@@ -226,7 +230,7 @@ public class MariaDbPoolDataSource
       this.url = url;
       config();
     } else {
-      throw new SQLException(String.format("Wrong mariaDB url: %s", url));
+      throw new SQLException(String.format("Wrong TiDB url: %s", url));
     }
   }
 
@@ -241,7 +245,7 @@ public class MariaDbPoolDataSource
   }
 
   /**
-   * return user
+   * get User
    *
    * @return user
    */
@@ -253,7 +257,7 @@ public class MariaDbPoolDataSource
    * Set user
    *
    * @param user user
-   * @throws SQLException if configuration fails
+   * @throws SQLException if wrong resulting connection string
    */
   public void setUser(String user) throws SQLException {
     this.user = user;
@@ -261,36 +265,13 @@ public class MariaDbPoolDataSource
   }
 
   /**
-   * set password
+   * Set password
    *
    * @param password password
-   * @throws SQLException if configuration fails
+   * @throws SQLException if wrong configuration
    */
   public void setPassword(String password) throws SQLException {
     this.password = password;
     if (conf != null) config();
-  }
-
-  /** Close datasource. */
-  public void close() {
-    pool.close();
-  }
-
-  /**
-   * get pool name
-   *
-   * @return pool name
-   */
-  public String getPoolName() {
-    return (pool != null) ? pool.getPoolTag() : null;
-  }
-
-  /**
-   * Get current idle threads. !! For testing purpose only !!
-   *
-   * @return current thread id's
-   */
-  public List<String> testGetConnectionIdleThreadIds() {
-    return (pool != null) ? pool.testGetConnectionIdleThreadIds() : null;
   }
 }

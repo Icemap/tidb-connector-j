@@ -12,10 +12,10 @@ import javax.net.ssl.X509TrustManager;
  *
  * <p>This permit to have network encrypted, BUT client doesn't validate server identity !!
  */
-public class MariaDbX509TrustingManager implements X509TrustManager {
+public class TiDBX509TrustingManager implements X509TrustManager {
 
   /** Constructor */
-  public MariaDbX509TrustingManager() {}
+  public TiDBX509TrustingManager() {}
 
   @Override
   public void checkClientTrusted(X509Certificate[] x509Certificates, String string) {}

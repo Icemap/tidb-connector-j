@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.sql.*;
 
-/** MariaDB pool connection implementation */
-public class MariaDbPoolConnection implements PooledConnection {
+/** TiDB pool connection implementation */
+public class TiDBPoolConnection implements PooledConnection {
 
   private final Connection connection;
   private final List<ConnectionEventListener> connectionEventListeners;
@@ -22,7 +22,7 @@ public class MariaDbPoolConnection implements PooledConnection {
    *
    * @param connection connection to retrieve connection options
    */
-  public MariaDbPoolConnection(Connection connection) {
+  public TiDBPoolConnection(Connection connection) {
     this.connection = connection;
     this.connection.setPoolConnection(this);
     statementEventListeners = new CopyOnWriteArrayList<>();

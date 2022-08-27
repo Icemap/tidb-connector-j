@@ -13,20 +13,19 @@ import java.sql.Statement;
 import javax.sql.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.*;
 import org.tidb.jdbc.Configuration;
 import org.tidb.jdbc.HostAddress;
-import org.tidb.jdbc.MariaDbDataSource;
-import org.tidb.jdbc.MariaDbPoolDataSource;
+import org.tidb.jdbc.TiDBDataSource;
+import org.tidb.jdbc.TiDBPoolDataSource;
 import org.tidb.jdbc.export.SslMode;
 import org.tidb.jdbc.integration.tools.TcpProxy;
-import org.tidb.jdbc.pool.MariaDbInnerPoolConnection;
+import org.tidb.jdbc.pool.TiDBInnerPoolConnection;
 
 public class PooledConnectionTest extends Common {
 
   @Test
   public void testPooledConnectionClosed() throws Exception {
-    ConnectionPoolDataSource ds = new MariaDbDataSource(mDefUrl);
+    ConnectionPoolDataSource ds = new TiDBDataSource(mDefUrl);
     PooledConnection pc = ds.getPooledConnection();
     Connection connection = pc.getConnection();
     MyEventListener listener = new MyEventListener();
@@ -41,8 +40,8 @@ public class PooledConnectionTest extends Common {
 
   @Test
   public void testPoolWait() throws Exception {
-    try (MariaDbPoolDataSource ds =
-        new MariaDbPoolDataSource(
+    try (TiDBPoolDataSource ds =
+        new TiDBPoolDataSource(
             mDefUrl + "&sessionVariables=wait_timeout=1&maxIdleTime=2&testMinRemovalDelay=2")) {
       Thread.sleep(4000);
       PooledConnection pc = ds.getPooledConnection();
@@ -53,7 +52,7 @@ public class PooledConnectionTest extends Common {
 
   @Test
   public void testPoolWaitWithValidation() throws Exception {
-    try (MariaDbPoolDataSource ds = new MariaDbPoolDataSource(mDefUrl + "&poolValidMinDelay=1")) {
+    try (TiDBPoolDataSource ds = new TiDBPoolDataSource(mDefUrl + "&poolValidMinDelay=1")) {
       Thread.sleep(100);
       PooledConnection pc = ds.getPooledConnection();
       pc.getConnection().isValid(1);
@@ -79,8 +78,8 @@ public class PooledConnectionTest extends Common {
       url = url.replaceAll("sslMode=verify-full", "sslMode=verify-ca");
     }
 
-    try (MariaDbPoolDataSource ds =
-        new MariaDbPoolDataSource(url + "&poolValidMinDelay=1&connectTimeout=10&maxPoolSize=1")) {
+    try (TiDBPoolDataSource ds =
+        new TiDBPoolDataSource(url + "&poolValidMinDelay=1&connectTimeout=10&maxPoolSize=1")) {
 
       PooledConnection pc = ds.getPooledConnection();
       pc.getConnection().isValid(1);
@@ -101,16 +100,16 @@ public class PooledConnectionTest extends Common {
             && !"skysql".equals(System.getenv("srv"))
             && !"skysql-ha".equals(System.getenv("srv")));
 
-    try (MariaDbPoolDataSource ds =
-        new MariaDbPoolDataSource(mDefUrl + "&maxPoolSize=1&allowPublicKeyRetrieval")) {
+    try (TiDBPoolDataSource ds =
+        new TiDBPoolDataSource(mDefUrl + "&maxPoolSize=1&allowPublicKeyRetrieval")) {
       Thread.sleep(100);
-      MariaDbInnerPoolConnection pc = (MariaDbInnerPoolConnection) ds.getPooledConnection();
+      TiDBInnerPoolConnection pc = (TiDBInnerPoolConnection) ds.getPooledConnection();
       org.tidb.jdbc.Connection conn = pc.getConnection();
       String threadId = conn.getTiDBConnectionID();
 
       conn.getClient().forceClose();
       pc.close();
-      pc = (MariaDbInnerPoolConnection) ds.getPooledConnection();
+      pc = (TiDBInnerPoolConnection) ds.getPooledConnection();
       conn = pc.getConnection();
       assertTrue(conn.isClosed());
       pc.close();
@@ -122,7 +121,7 @@ public class PooledConnectionTest extends Common {
     Assumptions.assumeTrue(
         !"skysql".equals(System.getenv("srv")) && !"skysql-ha".equals(System.getenv("srv")));
 
-    ConnectionPoolDataSource ds = new MariaDbDataSource(mDefUrl);
+    ConnectionPoolDataSource ds = new TiDBDataSource(mDefUrl);
     PooledConnection pc = null;
     try {
       pc = ds.getPooledConnection();
@@ -157,7 +156,7 @@ public class PooledConnectionTest extends Common {
     stmt.execute("GRANT SELECT ON " + sharedConn.getCatalog() + ".* TO 'dsUser'@'%'");
     stmt.execute("FLUSH PRIVILEGES");
 
-    ConnectionPoolDataSource ds = new MariaDbDataSource(mDefUrl);
+    ConnectionPoolDataSource ds = new TiDBDataSource(mDefUrl);
     PooledConnection pc = ds.getPooledConnection("dsUser", "MySup8%rPassw@ord");
     MyEventListener listener = new MyEventListener();
     pc.addStatementEventListener(listener);

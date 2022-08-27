@@ -63,7 +63,7 @@ public class CredentialPluginTest extends Common {
         () -> createCon("credentialType=PROPERTY&user=identityUser"),
         "Access denied");
 
-    System.setProperty("mariadb.user", "identityUser");
+    System.setProperty("tidbdb.user", "identityUser");
     assertThrowsContains(
         SQLException.class,
         () -> createCon("credentialType=PROPERTY&pwdKey=myPwdKey"),
@@ -77,7 +77,7 @@ public class CredentialPluginTest extends Common {
       assertEquals("5", rs.getString(1));
     }
 
-    System.setProperty("mariadb.pwd", "!Passw0rd3Works");
+    System.setProperty("tidb.pwd", "!Passw0rd3Works");
 
     try (Connection conn = createCon("credentialType=PROPERTY")) {
       Statement stmt = conn.createStatement();
@@ -141,7 +141,7 @@ public class CredentialPluginTest extends Common {
 
   @Test
   @SetEnvironmentVariable(key = "myPwdKey", value = "!Passw0rd3Works")
-  @SetEnvironmentVariable(key = "MARIADB_USER", value = "identityUser")
+  @SetEnvironmentVariable(key = "TIDB_USER", value = "identityUser")
   public void envsDefaultIdentityAndPwdTest() throws Exception {
     try (Connection conn = createCon("credentialType=ENV&pwdKey=myPwdKey")) {
       Statement stmt = conn.createStatement();
@@ -152,8 +152,8 @@ public class CredentialPluginTest extends Common {
   }
 
   @Test
-  @SetEnvironmentVariable(key = "MARIADB_PWD", value = "!Passw0rd3Works")
-  @SetEnvironmentVariable(key = "MARIADB_USER", value = "identityUser")
+  @SetEnvironmentVariable(key = "TIDB_PWD", value = "!Passw0rd3Works")
+  @SetEnvironmentVariable(key = "TIDB_USER", value = "identityUser")
   public void envsIdentityDefaultPwdTest() throws Exception {
 
     try (Connection conn = createCon("credentialType=ENV")) {

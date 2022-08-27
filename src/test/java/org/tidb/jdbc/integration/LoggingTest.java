@@ -28,8 +28,8 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.tidb.jdbc.Connection;
-import org.tidb.jdbc.MariaDbPoolDataSource;
 import org.tidb.jdbc.Statement;
+import org.tidb.jdbc.TiDBPoolDataSource;
 import org.tidb.jdbc.client.tls.HostnameVerifier;
 
 public class LoggingTest extends Common {
@@ -71,8 +71,8 @@ public class LoggingTest extends Common {
       stmt.execute("SELECT 1");
     }
 
-    MariaDbPoolDataSource ds =
-        new MariaDbPoolDataSource(
+    TiDBPoolDataSource ds =
+        new TiDBPoolDataSource(
             mDefUrl + "&sessionVariables=wait_timeout=1&maxIdleTime=2&testMinRemovalDelay=2");
     Thread.sleep(4000);
     PooledConnection pc = ds.getPooledConnection();
@@ -110,11 +110,11 @@ public class LoggingTest extends Common {
           contents);
 
       Assertions.assertTrue(
-          contents.contains("pool MariaDB-pool new physical connection ")
+          contents.contains("pool TiDB-pool new physical connection ")
               && contents.contains("created (total:1, active:0, pending:0)"),
           contents);
       Assertions.assertTrue(
-          contents.contains("pool MariaDB-pool connection ")
+          contents.contains("pool TiDB-pool connection ")
               && contents.contains("removed due to inactivity"),
           contents);
     } catch (IOException e) {

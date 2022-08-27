@@ -10,7 +10,7 @@ import org.tidb.jdbc.plugin.CredentialPlugin;
 /**
  * Authentication using environment variable.
  *
- * <p>default implementation use environment variable MARIADB_USER and MARIADB_PWD
+ * <p>default implementation use environment variable TIDB_USER and TIDB_PWD
  *
  * <p>example : `jdbc:tidb://host/db?credentialType=ENV`
  *

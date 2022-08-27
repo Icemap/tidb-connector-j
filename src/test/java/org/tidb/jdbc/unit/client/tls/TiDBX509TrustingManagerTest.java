@@ -7,13 +7,13 @@ package org.tidb.jdbc.unit.client.tls;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.client.tls.MariaDbX509TrustingManager;
+import org.tidb.jdbc.client.tls.TiDBX509TrustingManager;
 
-public class MariaDbX509TrustingManagerTest {
+public class TiDBX509TrustingManagerTest {
 
   @Test
   public void check() {
-    MariaDbX509TrustingManager trustingManager = new MariaDbX509TrustingManager();
+    TiDBX509TrustingManager trustingManager = new TiDBX509TrustingManager();
     assertNull(trustingManager.getAcceptedIssuers());
     trustingManager.checkClientTrusted(null, null);
     trustingManager.checkServerTrusted(null, null);

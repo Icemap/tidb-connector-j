@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-or-later
 // Copyright (c) 2012-2014 Monty Program Ab
-// Copyright (c) 2015-2021 MariaDB Corporation Ab
+// Copyright (c) 2015-2021 tidb Corporation Ab
 
 package org.tidb.jdbc.util.log;
 
@@ -10,16 +10,16 @@ import java.util.HashMap;
 public final class Loggers {
 
   /** defined if using JDK if sfl4j is not present. possible values: JDK/CONSOLE */
-  public static final String FALLBACK_PROPERTY = "mariadb.logging.fallback";
+  public static final String FALLBACK_PROPERTY = "tidb.logging.fallback";
 
   /** set if console must log debug level */
-  public static final String CONSOLE_DEBUG_PROPERTY = "mariadb.logging.fallback.console.debug";
+  public static final String CONSOLE_DEBUG_PROPERTY = "tidb.logging.fallback.console.debug";
 
   /** !! testing only !! permit to disable SLF4J implementation even if SLF4j is present */
-  public static final String TEST_ENABLE_SLF4J = "mariadb.logging.slf4j.enable";
+  public static final String TEST_ENABLE_SLF4J = "tidb.logging.slf4j.enable";
 
   /** disable logging */
-  public static final String NO_LOGGER_PROPERTY = "mariadb.logging.disable";
+  public static final String NO_LOGGER_PROPERTY = "tidb.logging.disable";
 
   /** factory */
   private static LoggerFactory LOGGER_FACTORY;

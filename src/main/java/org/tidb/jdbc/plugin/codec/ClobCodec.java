@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.EnumSet;
-import org.tidb.jdbc.MariaDbClob;
+import org.tidb.jdbc.TiDBClob;
 import org.tidb.jdbc.client.Column;
 import org.tidb.jdbc.client.Context;
 import org.tidb.jdbc.client.DataType;
@@ -73,7 +73,7 @@ public class ClobCodec implements Codec<Clob> {
       case STRING:
       case VARCHAR:
       case VARSTRING:
-        Clob clob = new MariaDbClob(buf.buf(), buf.pos(), length);
+        Clob clob = new TiDBClob(buf.buf(), buf.pos(), length);
         buf.skip(length);
         return clob;
 

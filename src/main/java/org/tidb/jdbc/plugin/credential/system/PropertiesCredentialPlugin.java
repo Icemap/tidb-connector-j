@@ -12,7 +12,7 @@ import org.tidb.jdbc.plugin.CredentialPlugin;
 /**
  * Authentication using java system properties.
  *
- * <p>default implementation use system properties `mariadb.user` and `mariadb.pwd`
+ * <p>default implementation use system properties `tidbdb.user` and `tidb.pwd`
  *
  * <p>example : `jdbc:tidb://host/db?credentialType=PROPERTY`
  *
@@ -40,10 +40,10 @@ public class PropertiesCredentialPlugin implements CredentialPlugin {
 
     String userKey = this.conf.nonMappedOptions().getProperty("userKey");
     String pwdKey = this.conf.nonMappedOptions().getProperty("pwdKey");
-    String propUser = System.getProperty(userKey != null ? userKey : "mariadb.user");
+    String propUser = System.getProperty(userKey != null ? userKey : "tidbdb.user");
 
     return new Credential(
         propUser == null ? userName : propUser,
-        System.getProperty(pwdKey != null ? pwdKey : "mariadb.pwd"));
+        System.getProperty(pwdKey != null ? pwdKey : "tidb.pwd"));
   }
 }

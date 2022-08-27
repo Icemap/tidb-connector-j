@@ -152,7 +152,7 @@ public class LocalTimeCodec implements Codec<LocalTime> {
           if (val.contains(" ")) {
             ZoneId tz =
                 cal != null ? cal.getTimeZone().toZoneId() : TimeZone.getDefault().toZoneId();
-            return LocalDateTime.parse(val, LocalDateTimeCodec.MARIADB_LOCAL_DATE_TIME.withZone(tz))
+            return LocalDateTime.parse(val, LocalDateTimeCodec.TIDB_LOCAL_DATE_TIME.withZone(tz))
                 .toLocalTime();
           } else {
             return LocalTime.parse(val);
@@ -244,7 +244,7 @@ public class LocalTimeCodec implements Codec<LocalTime> {
           if (val.contains(" ")) {
             ZoneId tz =
                 cal != null ? cal.getTimeZone().toZoneId() : TimeZone.getDefault().toZoneId();
-            return LocalDateTime.parse(val, LocalDateTimeCodec.MARIADB_LOCAL_DATE_TIME.withZone(tz))
+            return LocalDateTime.parse(val, LocalDateTimeCodec.TIDB_LOCAL_DATE_TIME.withZone(tz))
                 .toLocalTime();
           } else {
             return LocalTime.parse(val);

@@ -12,7 +12,7 @@ import java.util.Set;
 import org.tidb.jdbc.Configuration;
 import org.tidb.jdbc.Connection;
 import org.tidb.jdbc.HostAddress;
-import org.tidb.jdbc.MariaDbPoolConnection;
+import org.tidb.jdbc.TiDBPoolConnection;
 import org.tidb.jdbc.client.Completion;
 import org.tidb.jdbc.message.server.OkPacket;
 
@@ -27,7 +27,7 @@ public class ExceptionFactory {
   private final Configuration conf;
   private final HostAddress hostAddress;
   private Connection connection;
-  private MariaDbPoolConnection poolConnection;
+  private TiDBPoolConnection poolConnection;
   private long threadId;
   private Statement statement;
 
@@ -44,7 +44,7 @@ public class ExceptionFactory {
 
   private ExceptionFactory(
       Connection connection,
-      MariaDbPoolConnection poolConnection,
+      TiDBPoolConnection poolConnection,
       Configuration conf,
       HostAddress hostAddress,
       long threadId,
@@ -141,7 +141,7 @@ public class ExceptionFactory {
    * @param internalPoolConnection internal pool connection
    * @return this {@link ExceptionFactory}
    */
-  public ExceptionFactory setPoolConnection(MariaDbPoolConnection internalPoolConnection) {
+  public ExceptionFactory setPoolConnection(TiDBPoolConnection internalPoolConnection) {
     this.poolConnection = internalPoolConnection;
     return this;
   }
@@ -394,7 +394,7 @@ public class ExceptionFactory {
      */
     public SqlExceptionFactory(
         Connection connection,
-        MariaDbPoolConnection poolConnection,
+        TiDBPoolConnection poolConnection,
         Configuration conf,
         HostAddress hostAddress,
         long threadId,

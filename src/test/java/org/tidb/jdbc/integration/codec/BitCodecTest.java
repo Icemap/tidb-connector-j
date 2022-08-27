@@ -16,8 +16,8 @@ import java.util.BitSet;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.tidb.jdbc.MariaDbBlob;
 import org.tidb.jdbc.Statement;
+import org.tidb.jdbc.TiDBBlob;
 import org.tidb.jdbc.integration.Common;
 
 public class BitCodecTest extends CommonCodecTest {
@@ -579,12 +579,12 @@ public class BitCodecTest extends CommonCodecTest {
 
   public void getBlob(ResultSet rs) throws SQLException {
 
-    assertEquals(new MariaDbBlob(new byte[] {(byte) 0x00}), rs.getBlob(1));
+    assertEquals(new TiDBBlob(new byte[] {(byte) 0x00}), rs.getBlob(1));
     assertFalse(rs.wasNull());
-    assertEquals(new MariaDbBlob(new byte[] {(byte) 0x01}), rs.getBlob(2));
-    assertEquals(new MariaDbBlob(new byte[] {0x01}), rs.getBlob("t2alias"));
+    assertEquals(new TiDBBlob(new byte[] {(byte) 0x01}), rs.getBlob(2));
+    assertEquals(new TiDBBlob(new byte[] {0x01}), rs.getBlob("t2alias"));
     assertFalse(rs.wasNull());
-    assertEquals(new MariaDbBlob(new byte[] {(byte) 15, (byte) 4}), rs.getBlob(3));
+    assertEquals(new TiDBBlob(new byte[] {(byte) 15, (byte) 4}), rs.getBlob(3));
     assertFalse(rs.wasNull());
     assertNull(rs.getBlob(4));
     assertTrue(rs.wasNull());
