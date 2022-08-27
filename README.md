@@ -50,7 +50,6 @@ For a Getting started guide, API docs, recipes, etc. see here:
 - [x] Repair `major`, `minor`, `patch` version get logic.
 - [x] Build CI for TiDB.
 - [x] Support close connection for TiDB (Use `KILL TIDB xxx` statement).
-- [ ] Support HA for TiDB.
 - [ ] Support [Optimistic Transactions and Pessimistic Transactions](https://docs.pingcap.com/tidb/stable/dev-guide-optimistic-and-pessimistic-transaction) for TiDB.
 - [ ] Support [Follower Read](https://docs.pingcap.com/tidb/stable/dev-guide-use-follower-read)
 - [ ] Support [Stale Read](https://docs.pingcap.com/tidb/stable/dev-guide-use-stale-read)
